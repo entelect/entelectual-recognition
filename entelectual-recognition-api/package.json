@@ -1,0 +1,21 @@
+{
+  "name": "entelectual-recognition-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^1.2.8",
+    "canvas": "^2.6.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "face-api.js": "0.20.1",
+    "morgan": "~1.9.1",
+    "sharp": "^0.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "1.19.1"
+  }
+}

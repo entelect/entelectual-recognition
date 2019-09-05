@@ -104,9 +104,6 @@ entelectual-recognition/
 # mypy
 .mypy_cache/
 
-#VS Code
-.vscode/
-
 #Project Specific
 data/
 predictions/
