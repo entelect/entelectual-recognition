@@ -85,4 +85,13 @@ async function trainModel(userLabels) {
   await writeFile(filePath, facesJson)
 }
 
+
+router.get('/face-model', function (req, res, next) {
+  res.header("Content-Type", "application/json")
+  const facesFile = path.join(__dirname, facesFileName)
+  delete require.cache[facesFile]
+  const result = require(facesFile)
+  res.send(result);
+});
+
 module.exports = router;
