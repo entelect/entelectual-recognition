@@ -1,4 +1,5 @@
 import * as faceapi from 'face-api.js'
+import axios from 'axios'
 
 export const state = () => ({
   faces: [],
@@ -30,26 +31,26 @@ export const state = () => ({
 })
 
 export const mutations = {
-  loading (state) {
+  loading(state) {
     state.loading = true
   },
 
-  load (state) {
+  load(state) {
     state.loading = false
     state.loaded = true
   },
 
-  setFaces (state, faces) {
+  setFaces(state, faces) {
     state.faces = faces
   },
 
-  setFaceMatcher (state, matcher) {
+  setFaceMatcher(state, matcher) {
     state.faceMatcher = matcher
   }
 }
 
 export const actions = {
-  async load ({ commit, state }) {
+  async load({ commit, state }) {
     if (!state.loading && !state.loaded) {
       commit('loading')
       return Promise.all([
@@ -63,15 +64,17 @@ export const actions = {
         })
     }
   },
-  async getAll ({ commit, state }) {
-    const data = await this.$axios.$get('/api/face/getAll')
-    commit('setFaces', data)
+  async getAll({ commit, state }) {
+    // const data = await axios.get('/api/face/getAll')
+    axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+    const response = await axios.get('http://localhost:3000/users/face-model');
+    commit('setFaces', response.data)
   },
-  async save ({ commit }, faces) {
+  async save({ commit }, faces) {
     const { data } = await this.$axios.$post('/api/face/save', { faces })
     commit('setFaces', data)
   },
-  getFaceMatcher ({ commit, state }) {
+  getFaceMatcher({ commit, state }) {
     const labeledDescriptors = []
     state.faces.forEach(face => {
       let descriptors = face.descriptors.map(desc => {
@@ -95,7 +98,7 @@ export const actions = {
     commit('setFaceMatcher', matcher)
     return matcher
   },
-  async getFaceDetections ({ commit, state }, { canvas, options }) {
+  async getFaceDetections({ commit, state }, { canvas, options }) {
     let detections = faceapi
       .detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions({
         scoreThreshold: state.detections.scoreThreshold,
@@ -112,7 +115,7 @@ export const actions = {
     }
     return await detections
   },
-  async recognize ({ commit, state }, { descriptor, options }) {
+  async recognize({ commit, state }, { descriptor, options }) {
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
       return bestMatch
@@ -120,7 +123,7 @@ export const actions = {
     return null
   },
 
-  draw ({ commit, state }, { canvasDiv, canvasCtx, detection, options }) {
+  draw({ commit, state }, { canvasDiv, canvasCtx, detection, options }) {
     let emotions = ''
     // filter only emontions above confidence treshold and exclude 'neutral'
     if (options.expressionsEnabled && detection.expressions) {
@@ -155,7 +158,7 @@ export const actions = {
     }
   },
 
-  async createCanvas ({ commit, state }, elementId) {
+  async createCanvas({ commit, state }, elementId) {
     const canvas = await faceapi.createCanvasFromMedia(document.getElementById(elementId))
     return canvas
   }
