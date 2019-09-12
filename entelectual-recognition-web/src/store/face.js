@@ -10,7 +10,7 @@ export const state = () => ({
   useTiny: false,
 
   detections: {
-    scoreThreshold: 0.5,
+    scoreThreshold: 0.6,
     inputSize: 320,
     boxColor: 'blue',
     textColor: 'red',
@@ -65,7 +65,6 @@ export const actions = {
     }
   },
   async getAll({ commit, state }) {
-    // const data = await axios.get('/api/face/getAll')
     axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
     const response = await axios.get('http://localhost:3000/users/face-model');
     commit('setFaces', response.data)
@@ -98,23 +97,26 @@ export const actions = {
     commit('setFaceMatcher', matcher)
     return matcher
   },
+
   async getFaceDetections({ commit, state }, { canvas, options }) {
     let detections = faceapi
       .detectAllFaces(canvas, new faceapi.TinyFaceDetectorOptions({
         scoreThreshold: state.detections.scoreThreshold,
         inputSize: state.detections.inputSize
       }))
-    if (options && options.expressionsEnabled) {
-      detections = detections.withFaceExpressions()
-    }
+
     if (options && (options.landmarksEnabled || options.descriptorsEnabled)) {
       detections = detections.withFaceLandmarks(state.useTiny)
     }
     if (options && options.descriptorsEnabled) {
       detections = detections.withFaceDescriptors()
     }
+    if (options && options.expressionsEnabled) {
+      detections = detections.withFaceExpressions()
+    }
     return await detections
   },
+
   async recognize({ commit, state }, { descriptor, options }) {
     if (options.descriptorsEnabled) {
       const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
@@ -125,13 +127,14 @@ export const actions = {
 
   draw({ commit, state }, { canvasDiv, canvasCtx, detection, options }) {
     let emotions = ''
-    // filter only emontions above confidence treshold and exclude 'neutral'
-    if (options.expressionsEnabled && detection.expressions) {
-      emotions = detection.expressions
-        .filter(expr => expr.probability > state.expressions.minConfidence && expr.expression !== 'neutral')
-        .map(expr => expr.expression)
-        .join(' & ')
-    }
+  //   // filter only emontions above confidence treshold and exclude 'neutral'
+  //   if (options.expressionsEnabled && detection.expressions) {
+  // //    console.log(detection)
+  //     emotions = detection.expressions
+  //       .filter(expr => expr.probability > state.expressions.minConfidence && expr.expression !== 'neutral')
+  //      .map(expr => expr.expression)
+  //      .join(' & ')
+  //   }
     let name = ''
     if (options.descriptorsEnabled && detection.recognition) {
       name = detection.recognition.toString(state.descriptors.withDistance)
@@ -153,9 +156,9 @@ export const actions = {
       canvasCtx.fillText(text, box.x + padText, box.y + box.height + padText + (state.detections.fontSize * 0.6))
     }
 
-    if (options.landmarksEnabled && detection.landmarks) {
-      faceapi.drawLandmarks(canvasDiv, detection.landmarks, { lineWidth: state.landmarks.lineWidth, drawLines: state.landmarks.drawLines })
-    }
+    // if (options.landmarksEnabled && detection.landmarks) {
+    //   faceapi.draw.drawFaceLandmarks(canvasDiv, detection.landmarks, { lineWidth: state.landmarks.lineWidth, drawLines: state.landmarks.drawLines })
+    // }
   },
 
   async createCanvas({ commit, state }, elementId) {

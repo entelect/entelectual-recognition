@@ -1,6 +1,8 @@
 <template>
-  <video id="live-video" width="320" height="247" autoplay />
-  <canvas id="live-canvas" width="320" height="247" />
+  <div>
+    <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
+    <canvas id="live-canvas" width="320" height="247" />
+  </div>
 </template>
 
 <script>
@@ -19,11 +21,21 @@ export default {
       withOptions: [0, 1, 2, 3]
     };
   },
+    watch: {
+    fps: function(newFps) {
+      const videoDiv = document.getElementById("live-video");
+      const canvasDiv = document.getElementById("live-canvas");
+      const canvasCtx = canvasDiv.getContext("2d");
+      this.start(videoDiv, canvasDiv, canvasCtx, newFps);
+    }
+  },
 
   async beforeMount() {
     await this.$store
       .dispatch("face/getAll")
       .then(() => this.$store.dispatch("face/getFaceMatcher"));
+
+      await this.$store.dispatch("face/load");
   },
 
   async mounted() {
@@ -67,7 +79,7 @@ export default {
         );
         if (detections.length) {
           if (self.isProgressActive) {
-            self.increaseProgress();
+         //   self.increaseProgress();
             self.isProgressActive = false;
           }
           detections.forEach(async detection => {
