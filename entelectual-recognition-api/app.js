@@ -9,6 +9,7 @@ var swaggerUi = require('swagger-ui-express');
 var swaggerJsdoc = require('swagger-jsdoc');
 
 var modelsRouter = require('./routes/models');
+const eventsRouter = require("./routes/events");
 
 var app = express();
 
@@ -36,7 +37,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/models', modelsRouter);
+app.use('/events', eventsRouter);
 
 module.exports = app;
