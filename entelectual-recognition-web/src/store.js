@@ -72,7 +72,7 @@ if (typeof storeData !== 'function') {
 }
 
 // Dynamically require module
-function getModule(filename) {
+function getModule (filename) {
   const file = files(filename)
   const module = file.default || file
   if (module.commit) {
@@ -84,7 +84,7 @@ function getModule(filename) {
   return module
 }
 
-function getModuleNamespace(storeData, namePath, forAppend = false) {
+function getModuleNamespace (storeData, namePath, forAppend = false) {
   if (namePath.length === 1) {
     if (forAppend) {
       return storeData
@@ -98,13 +98,12 @@ function getModuleNamespace(storeData, namePath, forAppend = false) {
   return getModuleNamespace(storeData.modules[namespace], namePath, forAppend)
 }
 
-function appendModule(module, filename, name) {
+function appendModule (module, filename, name) {
   const file = files(filename)
   module.appends = module.appends || []
   module.appends.push(name)
   module[name] = file.default || file
 }
-
 
 // createStore
 export const createStore = storeData instanceof Function ? storeData : () => {
@@ -115,7 +114,6 @@ export const createStore = storeData instanceof Function ? storeData : () => {
   }))
 }
 
-
 export default storeData instanceof Function ? storeData : () => {
   return new Vuex.Store(Object.assign({
     strict: (process.env.NODE_ENV !== 'production')
@@ -123,7 +121,6 @@ export default storeData instanceof Function ? storeData : () => {
     state: storeData.state instanceof Function ? storeData.state() : {}
   }))
 }
-
 
 // export default new Vuex.Store({
 //   state: {

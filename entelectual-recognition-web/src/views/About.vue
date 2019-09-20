@@ -2,6 +2,9 @@
   <div>
     <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
     <canvas id="live-canvas" width="320" height="247" />
+
+    <span>Real FPS: {{ realFps }}</span>
+    <span>Duration: {{ duration }} ms</span>
   </div>
 </template>
 
@@ -10,7 +13,7 @@ export default {
   data() {
     return {
       interval: null,
-      fps: 15,
+      fps: 60,
       realFps: 0,
       step: 2,
       counter: 0,
@@ -21,12 +24,14 @@ export default {
       withOptions: [0, 1, 2, 3]
     };
   },
+
     watch: {
-    fps: function(newFps) {
-      const videoDiv = document.getElementById("live-video");
-      const canvasDiv = document.getElementById("live-canvas");
-      const canvasCtx = canvasDiv.getContext("2d");
-      this.start(videoDiv, canvasDiv, canvasCtx, newFps);
+    recognition: function(recognition) {
+      // const videoDiv = document.getElementById("live-video");
+      // const canvasDiv = document.getElementById("live-canvas");
+      // const canvasCtx = canvasDiv.getContext("2d");
+      // this.start(videoDiv, canvasDiv, canvasCtx, newFps);
+      console.log(recognition)
     }
   },
 
@@ -35,7 +40,7 @@ export default {
       .dispatch("face/getAll")
       .then(() => this.$store.dispatch("face/getFaceMatcher"));
 
-      await this.$store.dispatch("face/load");
+    await this.$store.dispatch("face/load");
   },
 
   async mounted() {
@@ -51,11 +56,14 @@ export default {
 
   methods: {
     async recognize() {
+      this.increaseProgress()
       await this.$store.dispatch("camera/startCamera").then(stream => {
         const videoDiv = document.getElementById("live-video");
-        const canvasDiv = document.getElementById('live-canvas')
-        const canvasCtx = canvasDiv.getContext('2d')
+        const canvasDiv = document.getElementById("live-canvas");
+        const canvasCtx = canvasDiv.getContext("2d");
         videoDiv.srcObject = stream;
+
+        this.increaseProgress()
         this.start(videoDiv, canvasDiv, canvasCtx, this.fps);
       });
     },
@@ -79,7 +87,7 @@ export default {
         );
         if (detections.length) {
           if (self.isProgressActive) {
-         //   self.increaseProgress();
+            self.increaseProgress();
             self.isProgressActive = false;
           }
           detections.forEach(async detection => {
@@ -102,6 +110,10 @@ export default {
         self.duration = (t1 - t0).toFixed(2);
         self.realFps = (1000 / (t1 - t0)).toFixed(2);
       }, 1000 / fps);
+    },
+
+    increaseProgress() {
+      this.progress = (100 / this.step) * ++this.counter;
     }
   }
 };
