@@ -13,7 +13,7 @@ faceapi.env.monkeyPatch({ Canvas, Image, ImageData, fetch: fetch });
 
 const facesFileName = 'faces.json'
 
-router.get('/', function (req, res, next) {
+router.get('/train', function (req, res, next) {
 
   const modelsPath = path.join(__dirname, 'models');
   Promise.all([
@@ -86,7 +86,7 @@ async function trainModel(userLabels) {
 }
 
 
-router.get('/face-model', function (req, res, next) {
+router.get('/face', function (req, res, next) {
   res.header("Content-Type", "application/json")
   const facesFile = path.join(__dirname, facesFileName)
   delete require.cache[facesFile]
