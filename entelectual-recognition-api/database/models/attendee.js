@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    Username: DataTypes.STRING
+    Username: {
+      type: DataTypes.STRING,
+      primaryKey: true
+    }
   }, {});
   Attendee.associate = function(models) {
     Location.hasMany(models.Event, {

@@ -14,16 +14,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      createdAt: {
+      CreatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      UpdatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     }).then(() => {
-        return queryInterface.addConstraint('Attendees', ['AttendeeId', 'EventId'], {
+        return queryInterface.addConstraint('Attendees', ['AttendeeId', 'EventId', 'Username'], {
         type: 'primary key',
         name: 'composite_primary_key'
       });
