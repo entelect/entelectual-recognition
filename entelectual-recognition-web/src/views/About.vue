@@ -25,13 +25,13 @@ export default {
     };
   },
 
-    watch: {
+  watch: {
     recognition: function(recognition) {
       // const videoDiv = document.getElementById("live-video");
       // const canvasDiv = document.getElementById("live-canvas");
       // const canvasCtx = canvasDiv.getContext("2d");
       // this.start(videoDiv, canvasDiv, canvasCtx, newFps);
-    //  console.log(recognition)
+      //  console.log(recognition)
     }
   },
 
@@ -56,14 +56,14 @@ export default {
 
   methods: {
     async recognize() {
-      this.increaseProgress()
+      this.increaseProgress();
       await this.$store.dispatch("camera/startCamera").then(stream => {
         const videoDiv = document.getElementById("live-video");
         const canvasDiv = document.getElementById("live-canvas");
         const canvasCtx = canvasDiv.getContext("2d");
         videoDiv.srcObject = stream;
 
-        this.increaseProgress()
+        this.increaseProgress();
         this.start(videoDiv, canvasDiv, canvasCtx, this.fps);
       });
     },
@@ -75,35 +75,21 @@ export default {
       self.interval = setInterval(async () => {
         let t0 = performance.now();
         canvasCtx.drawImage(videoDiv, 0, 0, 320, 247);
-        const options = {
-          detectionsEnabled: self.withOptions.find(o => o == 0) === 0,
-          landmarksEnabled: self.withOptions.find(o => o == 1) === 1,
-          descriptorsEnabled: self.withOptions.find(o => o == 2) === 2,
-          expressionsEnabled: self.withOptions.find(o => o == 3) === 3
-        };
-        const detections = await self.$store.dispatch(
-          "face/getFaceDetections",
-          { canvas: canvasDiv, options }
-        );
-        if (detections.length) {
+        const detection = await self.$store.dispatch("face/getFaceDetection", {
+          canvas: canvasDiv
+        });
+        if (detection) {
           if (self.isProgressActive) {
             self.increaseProgress();
             self.isProgressActive = false;
           }
-          detections.forEach(async detection => {
-            detection.recognition = await self.$store.dispatch(
-              "face/recognize",
-              {
-                descriptor: detection.descriptor,
-                options
-              }
-            );
-            self.$store.dispatch("face/draw", {
-              canvasDiv,
-              canvasCtx,
-              detection,
-              options
-            });
+
+          detection.recognition = await self.$store.dispatch("face/recognize", {
+            descriptor: detection.descriptor
+          });
+          self.$store.dispatch("face/draw", {
+            canvasCtx,
+            detection
           });
         }
         let t1 = performance.now();
