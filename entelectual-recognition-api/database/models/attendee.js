@@ -1,22 +1,22 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Attendee = sequelize.define('Attendee', {
-    AttendeeId: {
+    attendeeId: {
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    EventId: {
+    eventId: {
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    Username: {
+    username: {
       type: DataTypes.STRING,
       primaryKey: true
     }
   }, {});
   Attendee.associate = function(models) {
-    Location.hasMany(models.Event, {
-      foreignKey: 'EventId',
+    Attendee.hasMany(models.Event, {
+      foreignKey: 'eventId',
       as: 'events',
       onDelete: 'RESTRICT',
     });

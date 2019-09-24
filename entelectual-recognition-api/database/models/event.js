@@ -1,24 +1,24 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('Event', {
-    EventId: { 
+    eventId: { 
       type: DataTypes.INTEGER,
       primaryKey: true
     },
-    Name: DataTypes.STRING,
-    Description: DataTypes.STRING,
-    Location: DataTypes.INTEGER,
-    Date: DataTypes.DATE
+    name: DataTypes.STRING,
+    description: DataTypes.STRING,
+    location: DataTypes.INTEGER,
+    eventDate: DataTypes.DATE
   }, {});
   Event.associate = function(models) {
     Event.hasMany(models.Event, {
-      foreignKey: 'EventId',
+      foreignKey: 'eventId',
       as: 'events',
       onDelete: 'RESTRICT',
     });
 
     Event.hasMany(models.Location, {
-      foreignKey: 'LocationId',
+      foreignKey: 'locationId',
       as: 'locations',
       onDelete: 'RESTRICT',
     });

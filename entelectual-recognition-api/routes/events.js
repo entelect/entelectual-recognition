@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var models = require("../database/models");
 
 /**
 * @swagger
@@ -15,8 +16,16 @@ var router = express.Router();
 *       200:
 *         description: List of events as a json object 
 */
-router.get('/', function(req, res, next) {
-    res.send("Ok");
+router.get('/', async function(req, res, next) {
+    try {
+        const events = await models.Event.findAll();
+        return res.status(200).json({ events });
+      } catch (error) {
+        return res.status(500).send(error.message);
+      }
+
+
+   // res.send("Ok");
 });
 
 module.exports = router;

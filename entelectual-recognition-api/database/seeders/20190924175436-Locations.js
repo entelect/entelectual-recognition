@@ -5,14 +5,14 @@ module.exports = {
     'Locations',
     [
       {
-        Name: 'Johannesburg',
-        CreatedAt: new Date(),
-        UpdatedAt: new Date()
+        name: 'Johannesburg',
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
-        Name: 'Cape Town',
-        CreatedAt: new Date(),
-        UpdatedAt: new Date()
+        name: 'Cape Town',
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
     ],
     {},

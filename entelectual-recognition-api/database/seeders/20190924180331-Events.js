@@ -5,12 +5,12 @@ module.exports = {
     'Events',
     [
       {
-        Name: 'DevDay Johannesburg',
-        Description: 'DevDay Barnyard Rivonia',
-        Location: 1,
-        Date: '2019-10-10',
-        CreatedAt: new Date(),
-        UpdatedAt: new Date()
+        name: 'DevDay Johannesburg',
+        description: 'DevDay Barnyard Rivonia',
+        location: 1,
+        eventDate: '2019-10-10',
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ],
     {},

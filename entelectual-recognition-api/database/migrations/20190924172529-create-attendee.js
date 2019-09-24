@@ -2,28 +2,28 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Attendees', {
-      AttendeeId: {
+      attendeeId: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      EventId: {
+      eventId: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      Username: {
+      username: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      CreatedAt: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      UpdatedAt: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     }).then(() => {
-        return queryInterface.addConstraint('Attendees', ['AttendeeId', 'EventId', 'Username'], {
+        return queryInterface.addConstraint('Attendees', ['attendeeId', 'eventId', 'username'], {
         type: 'primary key',
         name: 'composite_primary_key'
       });

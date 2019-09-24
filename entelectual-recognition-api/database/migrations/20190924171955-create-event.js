@@ -2,33 +2,33 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Events', {
-      EventId: {
+      eventId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      Name: {
+      name: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      Description: {
+      description: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      Location: {
+      location: {
         allowNull: false,
         type: Sequelize.INTEGER
       },
-      Date: {
+      eventDate: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      CreatedAt: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      UpdatedAt: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
