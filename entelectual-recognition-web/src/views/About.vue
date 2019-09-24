@@ -3,9 +3,6 @@
     <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
     <canvas id="live-canvas" width="320" height="247" />
 
-    <span>Real FPS: {{ realFps }}</span>
-    <span>Duration: {{ duration }} ms</span>
-
     <div>
       <b-modal
         id="confirm-modal"

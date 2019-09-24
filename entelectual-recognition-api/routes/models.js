@@ -13,6 +13,21 @@ faceapi.env.monkeyPatch({ Canvas, Image, ImageData, fetch: fetch });
 
 const facesFileName = 'faces.json'
 
+
+/**
+* @swagger
+* /v1/models/train:
+*   get:
+*     tags:
+*      - models
+*     name: Train Face Model
+*     summary: Trains face model
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Sucessfully trained the face model
+*/
 router.get('/train', function (req, res, next) {
 
   const modelsPath = path.join(__dirname, 'models');
@@ -86,6 +101,21 @@ async function trainModel(userLabels) {
 }
 
 
+
+/**
+* @swagger
+* /v1/models/face:
+*   get:
+*     tags:
+*      - models
+*     name: Face Model
+*     summary: Gets the trained face model
+*     produces:
+*       - application/json
+*     responses:
+*       200:
+*         description: Face model as a json object 
+*/
 router.get('/face', function (req, res, next) {
   res.header("Content-Type", "application/json")
   const facesFile = path.join(__dirname, facesFileName)

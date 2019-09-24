@@ -24,7 +24,7 @@ var options = {
       },
     },
     // List of files to be processes. You can also set globs './routes/*.js'
-    apis: ['endpoints.js'],
+    apis: ['./routes/*.js'],
   };
   
   var specs = swaggerJsdoc(options);
@@ -37,8 +37,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 
-app.use('/doc', swaggerUi.serve, swaggerUi.setup(specs));
-app.use('/models', modelsRouter);
-app.use('/events', eventsRouter);
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/v1/models', modelsRouter);
+app.use('/v1/events', eventsRouter);
 
 module.exports = app;
