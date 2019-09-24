@@ -4,7 +4,7 @@ var models = require("../database/models");
 
 /**
 * @swagger
-* /v1/events/:
+* /v1/event/:
 *   get:
 *     tags:
 *      - events
@@ -23,9 +23,6 @@ router.get('/', async function(req, res, next) {
       } catch (error) {
         return res.status(500).send(error.message);
       }
-
-
-   // res.send("Ok");
 });
 
 module.exports = router;

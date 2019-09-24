@@ -16,7 +16,7 @@ const facesFileName = 'faces.json'
 
 /**
 * @swagger
-* /v1/models/train:
+* /v1/model/train:
 *   get:
 *     tags:
 *      - models
@@ -104,7 +104,7 @@ async function trainModel(userLabels) {
 
 /**
 * @swagger
-* /v1/models/face:
+* /v1/model/face:
 *   get:
 *     tags:
 *      - models

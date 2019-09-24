@@ -8,8 +8,8 @@ var cors = require('cors')
 var swaggerUi = require('swagger-ui-express');
 var swaggerJsdoc = require('swagger-jsdoc');
 
-var modelsRouter = require('./routes/models');
-const eventsRouter = require("./routes/events");
+var modelRouter = require('./routes/model');
+const eventRouter = require("./routes/event");
 
 var app = express();
 
@@ -38,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs));
-app.use('/v1/models', modelsRouter);
-app.use('/v1/events', eventsRouter);
+app.use('/v1/model', modelRouter);
+app.use('/v1/event', eventRouter);
 
 module.exports = app;
