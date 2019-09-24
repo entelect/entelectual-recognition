@@ -5,6 +5,19 @@
 
     <span>Real FPS: {{ realFps }}</span>
     <span>Duration: {{ duration }} ms</span>
+
+    <div>
+      <b-modal
+        id="confirm-modal"
+        cancel-title="Close"
+        ok-title="Confirm"
+        @close="hideModal"
+        @cancel="hideModal"
+        @ok="confirmModal"
+      >
+        <p class="my-4">Hello {{currentMatch}}!</p>
+      </b-modal>
+    </div>
   </div>
 </template>
 
@@ -22,14 +35,14 @@ export default {
       isProgressActive: true,
       recognition: "",
       multipeSameMatch: false,
-      currentMatch: ""
+      currentMatch: "",
+      pauseMatch: false
     };
   },
 
   watch: {
     multipeSameMatch: async function(multipeSameMatch) {
-      console.log(this.currentMatch)
-      await this.$store.dispatch("face/resetMatch");
+      this.showModal();
     }
   },
 
@@ -53,6 +66,24 @@ export default {
   },
 
   methods: {
+    async showModal() {
+      //await this.$store.dispatch("camera/pauseCamera")
+      this.pauseMatch = true;
+      this.$bvModal.show("confirm-modal");
+    },
+    async hideModal() {
+      //await this.$store.dispatch("camera/resumeCamera")
+      this.pauseMatch = false;
+      this.$bvModal.hide("confirm-modal");
+      await this.$store.dispatch("face/resetMatch");
+    },
+    async confirmModal() {
+      //await this.$store.dispatch("camera/resumeCamera")
+      this.pauseMatch = false;
+      this.$bvModal.hide("confirm-modal");
+      await this.$store.dispatch("face/resetMatch");
+    },
+
     async recognize() {
       this.increaseProgress();
       await this.$store.dispatch("camera/startCamera").then(stream => {
@@ -86,8 +117,14 @@ export default {
             descriptor: detection.descriptor
           });
 
-          this.multipeSameMatch = await self.$store.dispatch("face/isMultipeSameMatch")
-          this.currentMatch = await self.$store.dispatch("face/getCurrentMatch")
+          if (!this.pauseMatch) {
+            this.multipeSameMatch = await self.$store.dispatch(
+              "face/isMultipeSameMatch"
+            );
+            this.currentMatch = await self.$store.dispatch(
+              "face/getCurrentMatch"
+            );
+          }
 
           self.$store.dispatch("face/draw", {
             canvasCtx,

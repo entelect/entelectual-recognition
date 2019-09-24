@@ -11,6 +11,16 @@ export const mutations = {
       state.videoStream.getTracks().forEach(track => track.stop())
       state.videoStream = null
     }
+  },
+  pause(state) {
+    if(state.videoStream) {
+      state.videoStream.getTracks().forEach(track => track.enabled = false);
+    }
+  },
+  resume(state) {
+    if(state.videoStream) {
+      state.videoStream.getTracks().forEach(track => track.enabled = true);
+    }
   }
 }
 
@@ -31,8 +41,17 @@ export const actions = {
       throw new Error('This browser doesn\'t support WebRTC')
     }
   },
+
   async stopCamera ({ commit }) {
     commit('stop')
+  },
+
+  async pauseCamera ({ commit }) {
+    commit('pause')
+  },
+
+  async resumeCamera ({ commit }) {
+    commit('resume')
   }
 }
 
