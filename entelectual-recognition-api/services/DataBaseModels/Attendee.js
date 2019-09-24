@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-    const Attendee = sequelize.define('Attendee', {
+    const attendee = sequelize.define('Attendee', {
         AttendeeId: {
             type: Sequelize.INTEGER,
             allowNull: false
@@ -13,5 +13,5 @@ export default (sequelize, DataTypes) => {
             allowNull: false
         }
     });
-    return Book;
+    return attendee;
 };

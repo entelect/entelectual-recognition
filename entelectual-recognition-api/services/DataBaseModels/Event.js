@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-    const Event = sequelize.define('Event', {
+    const event = sequelize.define('Event', {
         EventId: {
             type: Sequelize.INTEGER,
             allowNull: false
@@ -21,5 +21,5 @@ export default (sequelize, DataTypes) => {
             allowNull: false
         }
     });
-    return Book;
+    return event;
 };

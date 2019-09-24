@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       interval: null,
-      fps: 60,
+      fps: 23,
       realFps: 0,
       step: 2,
       counter: 0,
@@ -31,7 +31,7 @@ export default {
       // const canvasDiv = document.getElementById("live-canvas");
       // const canvasCtx = canvasDiv.getContext("2d");
       // this.start(videoDiv, canvasDiv, canvasCtx, newFps);
-      console.log(recognition)
+    //  console.log(recognition)
     }
   },
 

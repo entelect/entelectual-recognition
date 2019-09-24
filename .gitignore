@@ -105,5 +105,7 @@ entelectual-recognition/
 .mypy_cache/
 
 #Project Specific
-data/
+data/interim
+data/processed
+data/raw
 predictions/

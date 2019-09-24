@@ -66,7 +66,7 @@ export const actions = {
   },
   async getAll ({ commit, state }) {
     axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
-    const response = await axios.get('http://localhost:3000/users/face-model')
+    const response = await axios.get('http://localhost:3000/models/face')
     commit('setFaces', response.data)
   },
   async save ({ commit }, faces) {
