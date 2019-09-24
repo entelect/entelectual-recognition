@@ -7,12 +7,18 @@ export const state = () => ({
   loaded: false,
   faceMatcher: null,
 
+  matchCountForSameMatch: 20,
+  currentMatch: '',
+  previousMatch: '',
+  matchCounter: 0,
+  multipeSameMatch: false,
+
   useTiny: false,
 
   detections: {
     scoreThreshold: 0.6,
     inputSize: 320,
-    boxColor: 'blue',
+    boxColor: '#8BC43E',
     textColor: 'red',
     lineWidth: 1,
     fontSize: 20,
@@ -31,26 +37,53 @@ export const state = () => ({
 })
 
 export const mutations = {
-  loading (state) {
+  loading(state) {
     state.loading = true
   },
 
-  load (state) {
+  load(state) {
     state.loading = false
     state.loaded = true
   },
 
-  setFaces (state, faces) {
+  setFaces(state, faces) {
     state.faces = faces
   },
 
-  setFaceMatcher (state, matcher) {
+  setFaceMatcher(state, matcher) {
     state.faceMatcher = matcher
+  },
+
+  setMatch(state, bestMatch) {
+    state.previousMatch = state.currentMatch
+    state.currentMatch = bestMatch.label
+
+    if (state.previousMatch && state.currentMatch && state.matchCounter < state.matchCountForSameMatch) {
+      state.matchCounter++
+      state.multipeSameMatch = false
+    }
+
+    else if (state.previousMatch && state.currentMatch && state.matchCounter >= state.matchCountForSameMatch) {
+      state.matchCounter = 0
+      state.multipeSameMatch = true
+    }
+
+    else {
+      state.matchCounter = 0
+      state.multipeSameMatch = false
+    }
+  },
+
+  resetMatch(state) {
+    state.previousMatch = ''
+    state.currentMatch = ''
+    state.matchCounter = 0
+    state.multipeSameMatch = false
   }
 }
 
 export const actions = {
-  async load ({ commit, state }) {
+  async load({ commit, state }) {
     if (!state.loading && !state.loaded) {
       commit('loading')
       return Promise.all([
@@ -64,16 +97,16 @@ export const actions = {
         })
     }
   },
-  async getAll ({ commit, state }) {
+  async getAll({ commit, state }) {
     axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
     const response = await axios.get('http://localhost:3000/models/face')
     commit('setFaces', response.data)
   },
-  async save ({ commit }, faces) {
+  async save({ commit }, faces) {
     const { data } = await this.$axios.$post('/api/face/save', { faces })
     commit('setFaces', data)
   },
-  getFaceMatcher ({ commit, state }) {
+  getFaceMatcher({ commit, state }) {
     const labeledDescriptors = []
     state.faces.forEach(face => {
       let descriptors = face.descriptors.map(desc => {
@@ -98,20 +131,21 @@ export const actions = {
     return matcher
   },
 
-  async getFaceDetection ({ commit, state }, { canvas }) {
-      const detections = await faceapi.detectSingleFace(canvas, new faceapi.TinyFaceDetectorOptions({
-        scoreThreshold: state.detections.scoreThreshold,
-        inputSize: state.detections.inputSize
-      })).withFaceLandmarks().withFaceDescriptor();
+  async getFaceDetection({ commit, state }, { canvas }) {
+    const detections = await faceapi.detectSingleFace(canvas, new faceapi.TinyFaceDetectorOptions({
+      scoreThreshold: state.detections.scoreThreshold,
+      inputSize: state.detections.inputSize
+    })).withFaceLandmarks().withFaceDescriptor();
     return detections
   },
 
-  async recognize ({ commit, state }, { descriptor }) {
+  async recognize({ commit, state }, { descriptor }) {
     const bestMatch = await state.faceMatcher.findBestMatch(descriptor)
+    commit('setMatch', bestMatch)
     return bestMatch
   },
 
-  draw ({ commit, state }, { canvasCtx, detection }) {
+  draw({ commit, state }, { canvasCtx, detection }) {
     let name = ''
     if (detection.recognition) {
       name = detection.recognition.toString(state.descriptors.withDistance)
@@ -132,8 +166,20 @@ export const actions = {
     }
   },
 
-  async createCanvas ({ commit, state }, elementId) {
+  async createCanvas({ commit, state }, elementId) {
     const canvas = await faceapi.createCanvasFromMedia(document.getElementById(elementId))
     return canvas
+  },
+
+  async isMultipeSameMatch({ commit, state }){
+    return state.multipeSameMatch
+  },
+
+  async getCurrentMatch({ commit, state }){
+    return state.currentMatch
+  },
+
+  async resetMatch({ commit, state }){
+    commit('resetMatch')
   }
 }

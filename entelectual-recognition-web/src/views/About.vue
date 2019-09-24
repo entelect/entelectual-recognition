@@ -13,7 +13,7 @@ export default {
   data() {
     return {
       interval: null,
-      fps: 23,
+      fps: 30,
       realFps: 0,
       step: 2,
       counter: 0,
@@ -21,17 +21,15 @@ export default {
       duration: 0,
       isProgressActive: true,
       recognition: "",
-      withOptions: [0, 1, 2, 3]
+      multipeSameMatch: false,
+      currentMatch: ""
     };
   },
 
   watch: {
-    recognition: function(recognition) {
-      // const videoDiv = document.getElementById("live-video");
-      // const canvasDiv = document.getElementById("live-canvas");
-      // const canvasCtx = canvasDiv.getContext("2d");
-      // this.start(videoDiv, canvasDiv, canvasCtx, newFps);
-      //  console.log(recognition)
+    multipeSameMatch: async function(multipeSameMatch) {
+      console.log(this.currentMatch)
+      await this.$store.dispatch("face/resetMatch");
     }
   },
 
@@ -87,6 +85,10 @@ export default {
           detection.recognition = await self.$store.dispatch("face/recognize", {
             descriptor: detection.descriptor
           });
+
+          this.multipeSameMatch = await self.$store.dispatch("face/isMultipeSameMatch")
+          this.currentMatch = await self.$store.dispatch("face/getCurrentMatch")
+
           self.$store.dispatch("face/draw", {
             canvasCtx,
             detection
