@@ -96,7 +96,8 @@ async function trainModel(userLabels) {
   }
 
   let facesJson = JSON.stringify(faces);
-  const filePath = path.join(__dirname, facesFileName);
+  const folderPath = path.join(__dirname, 'models');
+  const filePath = path.join(folderPath, facesFileName);
   await writeFile(filePath, facesJson)
 }
 
@@ -118,7 +119,8 @@ async function trainModel(userLabels) {
 */
 router.get('/face', function (req, res, next) {
   res.header("Content-Type", "application/json")
-  const facesFile = path.join(__dirname, facesFileName)
+  const folderPath = path.join(__dirname, 'models');
+  const facesFile = path.join(folderPath, facesFileName);
   delete require.cache[facesFile]
   const result = require(facesFile)
   res.send(result);
