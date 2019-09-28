@@ -1,20 +1,21 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var cors = require('cors')
+const cors = require('cors')
 
-var swaggerUi = require('swagger-ui-express');
-var swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
-var modelRouter = require('./routes/model');
+const modelRouter = require('./routes/model');
 const eventRouter = require("./routes/event");
+const attendeeRouter = require("./routes/attendee");
 
-var app = express();
+const app = express();
 
 
-var options = {
+const options = {
     swaggerDefinition: {
       // Like the one described here: https://swagger.io/specification/#infoObject
       info: {
@@ -27,7 +28,7 @@ var options = {
     apis: ['./routes/*.js'],
   };
   
-  var specs = swaggerJsdoc(options);
+const specs = swaggerJsdoc(options);
 
 
 app.use(logger('dev'));
@@ -40,5 +41,6 @@ app.use(cors())
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/v1/model', modelRouter);
 app.use('/v1/event', eventRouter);
+app.use('/v1/attendee', attendeeRouter);
 
 module.exports = app;

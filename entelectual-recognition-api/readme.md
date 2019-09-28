@@ -7,5 +7,5 @@ npx sequelize db:seed:all
 Migrate Database
 npx sequelize db:migrate 
 
-Seed specific table
+Generate seed 
 npx sequelize seed:generate --name Locations

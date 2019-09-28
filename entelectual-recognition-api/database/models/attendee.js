@@ -1,10 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Attendee = sequelize.define('Attendee', {
-    attendeeId: {
-      type: DataTypes.INTEGER,
-      primaryKey: true
-    },
     eventId: {
       type: DataTypes.INTEGER,
       primaryKey: true
