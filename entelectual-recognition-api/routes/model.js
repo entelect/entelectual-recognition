@@ -1,4 +1,4 @@
-var express = require('express');
+const express = require('express');
 const path = require('path');
 const { promises: { readFile, readdir, writeFile } } = require('fs');
 const faceapi = require("face-api.js")
@@ -6,7 +6,7 @@ const fetch = require('node-fetch')
 const sharp = require('sharp');
 const canvas = require("canvas")
 require('@tensorflow/tfjs-node');
-var router = express.Router();
+const router = express.Router();
 
 const { Canvas, Image, ImageData } = canvas;
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData, fetch: fetch });
@@ -66,12 +66,12 @@ async function trainModel(userLabels) {
 
   for (let i in userLabels) {
     const userDirectoryPath = path.join(directoryPath, userLabels[i]);
-    var photos = await readdir(userDirectoryPath)
+    const photos = await readdir(userDirectoryPath)
     const descriptors = []
     for (let j in photos) {
       const photoPath = path.join(userDirectoryPath, photos[j]);
 
-      var options = new faceapi.TinyFaceDetectorOptions({
+      const options = new faceapi.TinyFaceDetectorOptions({
         scoreThreshold: 0.5,
         inputSize: 320
       });

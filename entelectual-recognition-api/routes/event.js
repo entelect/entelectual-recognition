@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var models = require("../database/models");
+const express = require('express');
+const router = express.Router();
+const models = require("../database/models");
 
 /**
 * @swagger
