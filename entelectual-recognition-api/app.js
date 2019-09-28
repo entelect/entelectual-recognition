@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const cors = require('cors')
+const helmet = require('helmet')
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -13,7 +14,6 @@ const eventRouter = require("./routes/event");
 const attendeeRouter = require("./routes/attendee");
 
 const app = express();
-
 
 const options = {
     swaggerDefinition: {
@@ -30,7 +30,7 @@ const options = {
   
 const specs = swaggerJsdoc(options);
 
-
+app.use(helmet())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
