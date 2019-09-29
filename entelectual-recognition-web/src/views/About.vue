@@ -1,7 +1,15 @@
 <template>
   <div>
-    <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
-    <canvas id="live-canvas" width="320" height="247" />
+    <b-card-group deck>
+      <b-card bg-variant="secondary" text-variant="white" header="Recognition" class="text-center">
+        <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
+        <canvas id="live-canvas" width="320" height="247" />
+      </b-card>
+
+      <b-card bg-variant="secondary" text-variant="white" header="Attendees" class="text-center">
+        <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
+      </b-card>
+    </b-card-group>
 
     <div>
       <b-modal
@@ -13,6 +21,22 @@
         @ok="confirmModal"
       >
         <p class="my-4">Hello {{currentMatch}}!</p>
+      </b-modal>
+    </div>
+
+    <div>
+      <b-modal
+        id="event-modal"
+        no-close-on-backdrop="true"
+        no-close-on-esc="true"
+        hide-header-close="true"
+        ok-title="Confirm"
+        ok-only=true
+        @ok="confirmEventModal"
+      >
+        <b-form-group id="input-group" label="Event:" label-for="input">
+          <b-form-select id="input" v-model="selectedEventId" :options="eventsOptions" required></b-form-select>
+        </b-form-group>
       </b-modal>
     </div>
   </div>
@@ -27,13 +51,13 @@ export default {
       realFps: 0,
       step: 2,
       counter: 0,
-      progress: 0,
       duration: 0,
-      isProgressActive: true,
       recognition: "",
       multipeSameMatch: false,
       currentMatch: "",
-      pauseMatch: false
+      pauseMatch: false,
+      eventsOptions: [],
+      selectedEventId: null
     };
   },
 
@@ -52,7 +76,7 @@ export default {
   },
 
   async mounted() {
-    await this.recognize();
+    await this.initialize();
   },
 
   beforeDestroy() {
@@ -81,19 +105,41 @@ export default {
       await this.$store.dispatch("face/resetMatch");
     },
 
+    async confirmEventModal() {
+      this.$bvModal.hide("event-modal");
+      this.recognize();
+    },
+
+    async initialize() {
+      const events = await this.$store.dispatch("face/getEvents");
+
+      this.eventsOptions.push({
+        text: "Please select an event",
+        value: null
+      });
+
+      for (let i = 0; i < events.events.length; i++) {
+        var event = events.events[i];
+        this.eventsOptions.push({
+          text: event.name,
+          value: event.eventId
+        });
+      }
+
+      this.$bvModal.show("event-modal");
+      
+    },
+
     async recognize() {
-      this.increaseProgress();
       await this.$store.dispatch("camera/startCamera").then(stream => {
         const videoDiv = document.getElementById("live-video");
         const canvasDiv = document.getElementById("live-canvas");
         const canvasCtx = canvasDiv.getContext("2d");
         videoDiv.srcObject = stream;
-
-        this.increaseProgress();
-        this.start(videoDiv, canvasDiv, canvasCtx, this.fps);
+        this.startVideo(videoDiv, canvasDiv, canvasCtx, this.fps);
       });
     },
-    async start(videoDiv, canvasDiv, canvasCtx, fps) {
+    async startVideo(videoDiv, canvasDiv, canvasCtx, fps) {
       let self = this;
       if (self.interval) {
         clearInterval(self.interval);
@@ -105,23 +151,18 @@ export default {
           canvas: canvasDiv
         });
         if (detection) {
-          if (self.isProgressActive) {
-            self.increaseProgress();
-            self.isProgressActive = false;
-          }
-
           detection.recognition = await self.$store.dispatch("face/recognize", {
             descriptor: detection.descriptor
           });
 
-          if (!this.pauseMatch) {
-            this.multipeSameMatch = await self.$store.dispatch(
-              "face/isMultipeSameMatch"
-            );
-            this.currentMatch = await self.$store.dispatch(
-              "face/getCurrentMatch"
-            );
-          }
+          // if (!this.pauseMatch) {
+          //   this.multipeSameMatch = await self.$store.dispatch(
+          //     "face/isMultipeSameMatch"
+          //   );
+          //   this.currentMatch = await self.$store.dispatch(
+          //     "face/getCurrentMatch"
+          //   );
+          // }
 
           self.$store.dispatch("face/draw", {
             canvasCtx,
@@ -132,10 +173,6 @@ export default {
         self.duration = (t1 - t0).toFixed(2);
         self.realFps = (1000 / (t1 - t0)).toFixed(2);
       }, 1000 / fps);
-    },
-
-    increaseProgress() {
-      this.progress = (100 / this.step) * ++this.counter;
     }
   }
 };
