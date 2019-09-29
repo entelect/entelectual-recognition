@@ -7,7 +7,13 @@
       </b-card>
 
       <b-card bg-variant="secondary" text-variant="white" header="Attendees" class="text-center">
-        <b-card-text>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</b-card-text>
+        <b-card-text>
+          <ul>
+            <li v-for="attendee in attendees">
+              {{ attendee.username }}
+            </li>
+          </ul>
+        </b-card-text>
       </b-card>
     </b-card-group>
 
@@ -31,7 +37,7 @@
         no-close-on-esc="true"
         hide-header-close="true"
         ok-title="Confirm"
-        ok-only=true
+        ok-only="true"
         @ok="confirmEventModal"
       >
         <b-form-group id="input-group" label="Event:" label-for="input">
@@ -57,7 +63,8 @@ export default {
       currentMatch: "",
       pauseMatch: false,
       eventsOptions: [],
-      selectedEventId: null
+      selectedEventId: null,
+      attendees: []
     };
   },
 
@@ -107,19 +114,25 @@ export default {
 
     async confirmEventModal() {
       this.$bvModal.hide("event-modal");
+
+      var response = await this.$store.dispatch("face/getAttendees", {
+        eventId: this.selectedEventId
+      });
+
+      this.attendees = response.attendees;
       this.recognize();
     },
 
     async initialize() {
-      const events = await this.$store.dispatch("face/getEvents");
+      const response = await this.$store.dispatch("face/getEvents");
 
       this.eventsOptions.push({
         text: "Please select an event",
         value: null
       });
 
-      for (let i = 0; i < events.events.length; i++) {
-        var event = events.events[i];
+      for (let i = 0; i < response.events.length; i++) {
+        var event = response.events[i];
         this.eventsOptions.push({
           text: event.name,
           value: event.eventId
@@ -127,7 +140,6 @@ export default {
       }
 
       this.$bvModal.show("event-modal");
-      
     },
 
     async recognize() {

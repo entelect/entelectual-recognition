@@ -98,7 +98,6 @@ export const actions = {
     }
   },
   async getAll({ commit, state }) {
-    axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
     const response = await axios.get('http://localhost:3000/v1/model/face')
     commit('setFaces', response.data)
   },
@@ -185,6 +184,15 @@ export const actions = {
 
   async getEvents({commit, state}){
     const { data } = await axios.get('http://localhost:3000/v1/event')
+    return data;
+  },
+
+  async getAttendees({commit, state}, { eventId }){
+    const { data } = await axios.get('http://localhost:3000/v1/attendee', {
+      params: {
+        eventId: eventId
+      }
+    })
     return data;
   }
 }
