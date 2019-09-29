@@ -197,7 +197,7 @@ export const actions = {
   },
 
   async addAttendee({ commit, state }, { username, eventId }) {
-    const { data } = await axios.post('http://localhost:3000/v1/attendee', {
+    const { data } = await axios.post('http://localhost:3000/v1/attendee/add', {
         username: username,
         eventId: eventId
       }

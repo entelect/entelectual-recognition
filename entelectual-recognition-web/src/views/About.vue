@@ -9,7 +9,10 @@
       <b-card bg-variant="secondary" text-variant="white" header="Attendees" class="text-center">
         <b-card-text>
           <ul>
-            <li v-for="(attendee, index) in sortedAttendees" v-bind:key="index">{{ attendee.username }}</li>
+            <li
+              v-for="(attendee, index) in attendees"
+              v-bind:key="index"
+            >{{ attendee.username }}</li>
           </ul>
         </b-card-text>
       </b-card>
@@ -68,16 +71,12 @@ export default {
 
   watch: {
     multipeSameMatch: async function(multipeSameMatch) {
-      this.showModal();
+      if(!this.attendees.some(attendee => attendee.username === this.currentMatch)){
+        this.showModal();
+      }   
     }
   },
 
-  computed: {
-    sortedAttendees: function() {
-      return this.$_.orderBy(this.attendees, "createdAt", "desc");
-    }
-  },
-  
   async beforeMount() {
     await this.$store
       .dispatch("face/getAll")
@@ -112,6 +111,7 @@ export default {
     async confirmModal() {
       //await this.$store.dispatch("camera/resumeCamera")
       this.pauseMatch = false;
+      this.addAttendee(this.currentMatch);
       this.$bvModal.hide("confirm-modal");
       await this.$store.dispatch("face/resetMatch");
     },
@@ -123,7 +123,7 @@ export default {
         eventId: this.selectedEventId
       });
 
-      this.attendees = response.attendees;
+      this.attendees = this.$_.orderBy(response.attendees, "createdAt", "desc");
       this.recognize();
     },
 
@@ -171,14 +171,14 @@ export default {
             descriptor: detection.descriptor
           });
 
-          // if (!this.pauseMatch) {
-          //   this.multipeSameMatch = await self.$store.dispatch(
-          //     "face/isMultipeSameMatch"
-          //   );
-          //   this.currentMatch = await self.$store.dispatch(
-          //     "face/getCurrentMatch"
-          //   );
-          // }
+          if (!this.pauseMatch) {
+            this.multipeSameMatch = await self.$store.dispatch(
+              "face/isMultipeSameMatch"
+            );
+            this.currentMatch = await self.$store.dispatch(
+              "face/getCurrentMatch"
+            );
+          }
 
           self.$store.dispatch("face/draw", {
             canvasCtx,
@@ -189,12 +189,16 @@ export default {
         self.duration = (t1 - t0).toFixed(2);
         self.realFps = (1000 / (t1 - t0)).toFixed(2);
       }, 1000 / fps);
-    }
-  },
+    },
 
-  async addAttendee(username) {
-    const response = await this.$store.dispatch("face/addAttendee");
-    this.attendees.push(response.attendee);
+    async addAttendee(username) {
+      const response = await this.$store.dispatch("face/addAttendee", {
+        username: username,
+        eventId: this.selectedEventId
+      });
+      this.attendees.push(response.attendee);
+      this.attendees = this.$_.orderBy(this.attendees, "createdAt", "desc");
+    }
   }
 };
 </script>

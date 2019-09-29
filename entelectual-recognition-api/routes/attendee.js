@@ -68,11 +68,11 @@ router.post('/add', async function (req, res) {
 
   try {
     const { username, eventId } = req.body;
-    const atendee = await models.Attendee.create({
+    const attendee = await models.Attendee.create({
       username: username,
       eventId: eventId,
     })
-    return res.status(200).json({ atendee });
+    return res.status(200).json({ attendee });
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -123,6 +123,5 @@ router.post('/delete', async function (req, res) {
     return res.status(500).send(error.message);
   }
 });
-
 
 module.exports = router;
