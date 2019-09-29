@@ -1,19 +1,43 @@
 <template>
   <div>
-    <b-card-group deck>
-      <b-card bg-variant="secondary" text-variant="white" header="Recognition" class="text-center">
-        <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
-        <canvas id="live-canvas" width="320" height="247" />
-      </b-card>
+    <div class="row">
+      <div class="col-12">
+        <b-card-group deck>
+          <b-card
+            bg-variant="secondary"
+            text-variant="white"
+            header="Recognition"
+            class="text-center"
+          >
+            <div class="row">
+              <div class="col-12 mb-3">
+                <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
+                <canvas id="live-canvas" width="320" height="247" />
+              </div>
+              <div class="col-12">
+                <b-button class="float-right" variant="primary" v-on:click="signIn">Manual Sign In</b-button>
+              </div>
+            </div>
+          </b-card>
 
-      <b-card bg-variant="secondary" text-variant="white" header="Attendees" class="text-center">
-        <b-card-text>
-          <ul>
-            <li v-for="(attendee, index) in attendees" v-bind:key="index">{{ attendee.username }}</li>
-          </ul>
-        </b-card-text>
-      </b-card>
-    </b-card-group>
+          <b-card
+            bg-variant="secondary"
+            text-variant="white"
+            header="Attendees"
+            class="text-center"
+          >
+            <b-card-text>
+              <ul>
+                <li
+                  v-for="(attendee, index) in attendeesTop"
+                  v-bind:key="index"
+                >{{ attendee.username }}</li>
+              </ul>
+            </b-card-text>
+          </b-card>
+        </b-card-group>
+      </div>
+    </div>
 
     <div>
       <b-modal
@@ -64,14 +88,15 @@ export default {
       pauseMatch: false,
       eventsOptions: [],
       selectedEventId: null,
-      attendees: []
+      attendeesTop: [],
+      attendeesAll: []
     };
   },
 
   watch: {
     multipeSameMatch: async function(multipeSameMatch) {
       if (
-        !this.attendees.some(
+        !this.attendeesAll.some(
           attendee => attendee.username === this.currentMatch
         )
       ) {
@@ -119,6 +144,12 @@ export default {
       await this.$store.dispatch("face/resetMatch");
     },
 
+    async signIn() {
+      this.pauseMatch = true;
+      this.currentMatch = null;
+      this.$bvModal.show("confirm-modal");
+    },
+
     async confirmEventModal() {
       this.$bvModal.hide("event-modal");
 
@@ -126,7 +157,8 @@ export default {
         eventId: this.selectedEventId
       });
 
-      this.attendees = this.$_.orderBy(response.attendees, "createdAt", "desc");
+      this.attendeesAll = this.$_.orderBy(response.attendees, "createdAt", "desc");
+      this.attendeesTop = this.attendeesAll.slice(0, 10);
       this.recognize();
     },
 
@@ -199,8 +231,10 @@ export default {
         username: username,
         eventId: this.selectedEventId
       });
-      this.attendees.push(response.attendee);
-      this.attendees = this.$_.orderBy(this.attendees, "createdAt", "desc");
+      this.attendeesAll.push(response.attendee);
+      this.attendeesTop.push(response.attendee);
+
+      this.attendeesTop = this.$_.orderBy(this.attendeesTop, "createdAt", "desc").slice(0, 10);
     }
   }
 };
