@@ -9,10 +9,7 @@
       <b-card bg-variant="secondary" text-variant="white" header="Attendees" class="text-center">
         <b-card-text>
           <ul>
-            <li
-              v-for="(attendee, index) in attendees"
-              v-bind:key="index"
-            >{{ attendee.username }}</li>
+            <li v-for="(attendee, index) in attendees" v-bind:key="index">{{ attendee.username }}</li>
           </ul>
         </b-card-text>
       </b-card>
@@ -27,7 +24,9 @@
         @cancel="hideModal"
         @ok="confirmModal"
       >
-        <p class="my-4">Hello {{currentMatch}}!</p>
+        <p class="my-4">Hi, is this you?</p>
+        <b-form-input v-model="currentMatch" placeholder="Enter your first and last name."></b-form-input>
+        <p class="my-4">If it is not you please change the name with your first and last name.</p>
       </b-modal>
     </div>
 
@@ -71,9 +70,13 @@ export default {
 
   watch: {
     multipeSameMatch: async function(multipeSameMatch) {
-      if(!this.attendees.some(attendee => attendee.username === this.currentMatch)){
+      if (
+        !this.attendees.some(
+          attendee => attendee.username === this.currentMatch
+        )
+      ) {
         this.showModal();
-      }   
+      }
     }
   },
 
