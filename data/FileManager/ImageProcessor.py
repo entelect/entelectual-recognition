@@ -70,15 +70,19 @@ class ImageProcessor:
 
 if __name__ == '__main__':
     image_processor = ImageProcessor()
-    image_paths = image_processor.retrieve_images(2019, 'January')
+    image_paths = image_processor.retrieve_images(2019, 'February')
 
-    names = []
-    for count, image in enumerate(image_paths):
+    image_path_and_name = dict()
+    for image in image_paths:
         person_name = image_processor.process_image_name(image)
-        names.append(person_name)
+        path = str(image.resolve())
+        image_path_and_name[path] = person_name
+        break
 
     directory = Directory()
-    names = list(set(names))
+    names = list(set(image_path_and_name.values()))
 
     for name in names:
         directory.check_directory_exists(name)
+        # os.rename()
+
