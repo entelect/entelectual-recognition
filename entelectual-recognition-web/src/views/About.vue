@@ -57,11 +57,11 @@
     <div>
       <b-modal
         id="event-modal"
-        no-close-on-backdrop="true"
-        no-close-on-esc="true"
-        hide-header-close="true"
+        @no-close-on-backdrop="true"
+        @no-close-on-esc="true"
+        @hide-header-close="true"
         ok-title="Confirm"
-        ok-only="true"
+        @ok-only="true"
         @ok="confirmEventModal"
       >
         <b-form-group id="input-group" label="Event:" label-for="input">
