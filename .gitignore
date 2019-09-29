@@ -108,4 +108,7 @@ entelectual-recognition/
 data/interim
 data/processed
 data/raw
+data/UploadedFinal
 predictions/
+
+data/.idea/*
