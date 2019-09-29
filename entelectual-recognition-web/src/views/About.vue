@@ -9,9 +9,7 @@
       <b-card bg-variant="secondary" text-variant="white" header="Attendees" class="text-center">
         <b-card-text>
           <ul>
-            <li v-for="attendee in attendees">
-              {{ attendee.username }}
-            </li>
+            <li v-for="(attendee, index) in sortedAttendees" v-bind:key="index">{{ attendee.username }}</li>
           </ul>
         </b-card-text>
       </b-card>
@@ -74,6 +72,12 @@ export default {
     }
   },
 
+  computed: {
+    sortedAttendees: function() {
+      return this.$_.orderBy(this.attendees, "createdAt", "desc");
+    }
+  },
+  
   async beforeMount() {
     await this.$store
       .dispatch("face/getAll")
@@ -186,6 +190,11 @@ export default {
         self.realFps = (1000 / (t1 - t0)).toFixed(2);
       }, 1000 / fps);
     }
+  },
+
+  async addAttendee(username) {
+    const response = await this.$store.dispatch("face/addAttendee");
+    this.attendees.push(response.attendee);
   }
 };
 </script>

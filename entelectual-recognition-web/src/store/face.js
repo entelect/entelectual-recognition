@@ -170,29 +170,38 @@ export const actions = {
     return canvas
   },
 
-  async isMultipeSameMatch({ commit, state }){
+  async isMultipeSameMatch({ commit, state }) {
     return state.multipeSameMatch
   },
 
-  async getCurrentMatch({ commit, state }){
+  async getCurrentMatch({ commit, state }) {
     return state.currentMatch
   },
 
-  async resetMatch({ commit, state }){
+  async resetMatch({ commit, state }) {
     commit('resetMatch')
   },
 
-  async getEvents({commit, state}){
+  async getEvents({ commit, state }) {
     const { data } = await axios.get('http://localhost:3000/v1/event')
     return data;
   },
 
-  async getAttendees({commit, state}, { eventId }){
+  async getAttendees({ commit, state }, { eventId }) {
     const { data } = await axios.get('http://localhost:3000/v1/attendee', {
       params: {
         eventId: eventId
       }
     })
+    return data;
+  },
+
+  async addAttendee({ commit, state }, { username, eventId }) {
+    const { data } = await axios.post('http://localhost:3000/v1/attendee', {
+        username: username,
+        eventId: eventId
+      }
+    )
     return data;
   }
 }
