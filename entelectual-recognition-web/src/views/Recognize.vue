@@ -16,11 +16,11 @@
             </b-card-body>
 
             <b-card-footer>
-              <b-button class="float-right" variant="primary" v-on:click="signIn">Manual Sign In</b-button>
+              <b-button class="float-right" variant="primary" v-on:click="register">Manual Registration</b-button>
             </b-card-footer>
           </b-card>
 
-          <b-card text-variant="white" header="Attendees" class="text-center">
+          <b-card text-variant="white" v-bind:header="'Last ' + showLastNAttendees + '  Registrations'" class="text-center">
             <b-card-text>
               <div
                 v-for="(attendee, index) in attendeesTop"
@@ -140,7 +140,7 @@ export default {
       await this.$store.dispatch("face/resetMatch");
     },
 
-    async signIn() {
+    async register() {
       this.pauseMatch = true;
       this.currentMatch = null;
       this.$bvModal.show("confirm-modal");
