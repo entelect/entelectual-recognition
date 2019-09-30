@@ -18,8 +18,8 @@ export const state = () => ({
   detections: {
     scoreThreshold: 0.6,
     inputSize: 320,
-    boxColor: '#8BC43E',
-    textColor: 'red',
+    boxColor: '#61892F',
+    textColor: '#86C232',
     lineWidth: 1,
     fontSize: 20,
     fontStyle: 'Georgia'

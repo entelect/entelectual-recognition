@@ -22,12 +22,10 @@
 
           <b-card text-variant="white" header="Attendees" class="text-center">
             <b-card-text>
-              <ul>
-                <li
-                  v-for="(attendee, index) in attendeesTop"
-                  v-bind:key="index"
-                >{{ attendee.username }}</li>
-              </ul>
+              <div
+                v-for="(attendee, index) in attendeesTop"
+                v-bind:key="index"
+              >{{ attendee.username }}</div>
             </b-card-text>
           </b-card>
         </b-card-group>
