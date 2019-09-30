@@ -89,7 +89,8 @@ export default {
       eventsOptions: [],
       selectedEventId: null,
       attendeesTop: [],
-      attendeesAll: []
+      attendeesAll: [],
+      showLastNAttendees: 20
     };
   },
 
@@ -158,7 +159,7 @@ export default {
       });
 
       this.attendeesAll = this.$_.orderBy(response.attendees, "createdAt", "desc");
-      this.attendeesTop = this.attendeesAll.slice(0, 10);
+      this.attendeesTop = this.attendeesAll.slice(0, this.showLastNAttendees);
       this.recognize();
     },
 
@@ -234,7 +235,7 @@ export default {
       this.attendeesAll.push(response.attendee);
       this.attendeesTop.push(response.attendee);
 
-      this.attendeesTop = this.$_.orderBy(this.attendeesTop, "createdAt", "desc").slice(0, 10);
+      this.attendeesTop = this.$_.orderBy(this.attendeesTop, "createdAt", "desc").slice(0, this.showLastNAttendees);
     }
   }
 };
