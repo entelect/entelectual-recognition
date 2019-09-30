@@ -3,8 +3,7 @@
     <div class="row">
       <div class="col-12">
         <b-card-group deck>
-          <b-card
-            bg-variant="secondary"
+          <b-card   
             text-variant="white"
             header="Recognition"
             class="text-center"
@@ -20,8 +19,7 @@
             </div>
           </b-card>
 
-          <b-card
-            bg-variant="secondary"
+          <b-card       
             text-variant="white"
             header="Attendees"
             class="text-center"
