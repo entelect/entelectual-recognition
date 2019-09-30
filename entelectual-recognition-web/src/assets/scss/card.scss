@@ -2,11 +2,16 @@
     border-color: $light-gray;
 }
 
+.card-header {
+    background-color: $gray;
+    border-bottom-color: $light-gray;
+}
+
 .card-body {
     background-color: $gray;
 }
 
-.card-header {
+.card-footer {
     background-color: $gray;
-    border-bottom-color: $light-gray;
+    border-top-color: $light-gray;
 }

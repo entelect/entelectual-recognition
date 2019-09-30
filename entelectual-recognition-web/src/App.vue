@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="container-fluid">
     <div id="nav">
       <router-link to="/">Recognize</router-link>
     </div> 
