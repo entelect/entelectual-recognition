@@ -3,40 +3,35 @@
     <div class="row">
       <div class="col-12">
         <b-card-group deck>
-          <b-card
-            bg-variant="secondary"
-            text-variant="white"
-            header="Recognition"
-            class="text-center"
-          >
-            <div class="row">
-              <div class="col-12 mb-3">
-                <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
-                <canvas id="live-canvas" width="320" height="247" />
+          <b-card class="text-center" no-body>
+            <b-card-header>Sign In</b-card-header>
+
+            <b-card-body>
+              <div class="row">
+                <div class="col-12 mb-3">
+                  <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
+                  <canvas id="live-canvas" class="video-container" width="320" height="247" />
+                </div>
               </div>
-              <div class="col-12">
-                <b-button class="float-right" variant="primary" v-on:click="signIn">Manual Sign In</b-button>
-              </div>
-            </div>
+            </b-card-body>
+
+            <b-card-footer>
+              <b-button class="float-right" variant="primary" v-on:click="register">Manual Registration</b-button>
+            </b-card-footer>
           </b-card>
 
-          <b-card
-            bg-variant="secondary"
-            text-variant="white"
-            header="Attendees"
-            class="text-center"
-          >
+          <b-card text-variant="white" v-bind:header="'Last ' + showLastNAttendees + '  Registrations'" class="text-center">
             <b-card-text>
-              <ul>
-                <li
-                  v-for="(attendee, index) in attendeesTop"
-                  v-bind:key="index"
-                >{{ attendee.username }}</li>
-              </ul>
+              <div
+                v-for="(attendee, index) in attendeesTop"
+                v-bind:key="index"
+              >{{ attendee.username }}</div>
             </b-card-text>
           </b-card>
         </b-card-group>
       </div>
+
+      <img class="entelect-logo" src="../assets/images/entelect-logo.png" />
     </div>
 
     <div>
@@ -145,7 +140,7 @@ export default {
       await this.$store.dispatch("face/resetMatch");
     },
 
-    async signIn() {
+    async register() {
       this.pauseMatch = true;
       this.currentMatch = null;
       this.$bvModal.show("confirm-modal");
@@ -158,7 +153,11 @@ export default {
         eventId: this.selectedEventId
       });
 
-      this.attendeesAll = this.$_.orderBy(response.attendees, "createdAt", "desc");
+      this.attendeesAll = this.$_.orderBy(
+        response.attendees,
+        "createdAt",
+        "desc"
+      );
       this.attendeesTop = this.attendeesAll.slice(0, this.showLastNAttendees);
       this.recognize();
     },
@@ -235,7 +234,11 @@ export default {
       this.attendeesAll.push(response.attendee);
       this.attendeesTop.push(response.attendee);
 
-      this.attendeesTop = this.$_.orderBy(this.attendeesTop, "createdAt", "desc").slice(0, this.showLastNAttendees);
+      this.attendeesTop = this.$_.orderBy(
+        this.attendeesTop,
+        "createdAt",
+        "desc"
+      ).slice(0, this.showLastNAttendees);
     }
   }
 };
