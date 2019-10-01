@@ -72,12 +72,12 @@ async function trainModel(userLabels) {
       const photoPath = path.join(userDirectoryPath, photos[j]);
 
       const options = new faceapi.TinyFaceDetectorOptions({
-        scoreThreshold: 0.5,
-        inputSize: 320
+        scoreThreshold: 0.65,
+        inputSize: 256
       });
 
       const imgBuffer = await readFile(photoPath);
-      const resizedImageBuffer = await sharp(imgBuffer).resize(320, 247).toBuffer();
+      const resizedImageBuffer = await sharp(imgBuffer).resize(256, 256).toBuffer();
       const img = await canvas.loadImage(resizedImageBuffer)
 
       const detections = await faceapi.detectSingleFace(img, options).withFaceLandmarks().withFaceDescriptor();

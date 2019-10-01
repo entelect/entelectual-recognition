@@ -9,9 +9,10 @@
             <b-card-body>
               <div class="row">
                 <div class="col-12 mb-3">
-                  <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
-                  <canvas id="live-canvas" class="video-container" width="320" height="247" />
+                  <video id="live-video" width="256" height="256" hidden="hidden" autoplay />
+                  <canvas id="live-canvas" class="video-container" width="256" height="256" />
                 </div>
+                <div>FPS: {{realFps}}</div>
               </div>
             </b-card-body>
 
@@ -128,16 +129,24 @@ export default {
     },
     async hideModal() {
       //await this.$store.dispatch("camera/resumeCamera")
-      this.pauseMatch = false;
+      //this.pauseMatch = false;
+      this.delayResume();
       this.$bvModal.hide("confirm-modal");
       await this.$store.dispatch("face/resetMatch");
     },
     async confirmModal() {
       //await this.$store.dispatch("camera/resumeCamera")
-      this.pauseMatch = false;
+      //this.pauseMatch = false;
+      this.delayResume();
       this.addAttendee(this.currentMatch);
       this.$bvModal.hide("confirm-modal");
       await this.$store.dispatch("face/resetMatch");
+    },
+
+    async delayResume(){
+      setTimeout(() => {
+        this.pauseMatch = false;
+      }, 3000);
     },
 
     async signIn() {

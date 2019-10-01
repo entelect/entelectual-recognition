@@ -7,7 +7,7 @@ export const state = () => ({
   loaded: false,
   faceMatcher: null,
 
-  matchCountForSameMatch: 20,
+  matchCountForSameMatch: 15,
   currentMatch: '',
   previousMatch: '',
   matchCounter: 0,
@@ -16,8 +16,8 @@ export const state = () => ({
   useTiny: false,
 
   detections: {
-    scoreThreshold: 0.6,
-    inputSize: 320,
+    scoreThreshold: 0.7,
+    inputSize: 256,
     boxColor: '#61892F',
     textColor: '#86C232',
     lineWidth: 1,
