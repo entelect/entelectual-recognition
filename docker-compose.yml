@@ -4,6 +4,8 @@ services:
 #  Create a service named db.
   recognitiondatabase:
     image: "postgres"
+    networks:
+      - backend
     container_name: "recognition-postgres"
     environment:
       - POSTGRES_USER=postgres
@@ -18,7 +20,10 @@ services:
   recognitionapi:
     depends_on:
         - recognitiondatabase
+    entrypoint: ["/bin/bash", "./entrypoint.sh"]    
     image: recognitionapi
+    networks:
+      - backend
     container_name: recognition-api
     build: 
       context: ./entelectual-recognition-api
@@ -31,6 +36,8 @@ services:
     depends_on:
         - recognitionapi
     image: recognitionweb
+    networks:
+      - backend
     container_name: recognition-web
     build: 
       context: ./entelectual-recognition-web
@@ -38,6 +45,10 @@ services:
     ports: 
         - 3001:8080
     restart: always  
+
+networks:
+  backend:
+    driver: bridge
 
 volumes:
     postgres-data:
