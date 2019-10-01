@@ -16,8 +16,8 @@ class ImageProcessor:
         self.employee_images = os.path.join(os.path.split(os.getcwd())[0], 'EmployeeImages')
         self.image_file_extensions = ['jpg', 'jpeg', 'png']
 
-        self.two_worded_surname = ['van', 'le', 'de', 'du']
-        self.three_worded_surname = ['van der', 'de la']
+        self.two_worded_surname = ['van', 'le', 'de', 'du', 'da', 'mc']
+        self.three_worded_surname = ['van der', 'de la', 'van de', 'janse van']
         pass
 
     def retrieve_images(self, year, month):
@@ -57,20 +57,24 @@ class ImageProcessor:
                 The name of the person in the image
         """
         name = image_path.name
+        name = name[:-3] + name[-3:].lower()
         name = name.split(' ')
 
         for extension in self.image_file_extensions:
-            name = [x.replace(f".{extension}", '') for x in name]
+            name[-1] = name[-1].replace(f".{extension}", '')
 
         index = 2
         if len(name) > 1:
-            if ' '.join(name[1:3]) in self.three_worded_surname:
+            if ' '.join(name[1:3]).lower() in self.three_worded_surname:
                 index = 4
 
-            elif name[1] in self.two_worded_surname:
+            elif name[1].lower() in self.two_worded_surname:
                 index = 3
 
         name = '-'.join(name[:index])
+        name = name.replace('-edited', '')
+        name = name.replace('-cropped', '')
+        name = name.replace('-Cropped', '')
         return name
 
     def define_new_image_path(self, name, original_image_path):
@@ -126,5 +130,8 @@ if __name__ == '__main__':
         directory.check_directory_exists(person_name)
         for path in paths:
             new_path = image_processor.define_new_image_path(person_name, path)
-            os.rename(path, new_path)
-            print(f"{Path(path).name} moved to {new_path.parent}")
+            try:
+                os.rename(path, new_path)
+                print(f"{Path(path).name} moved to {new_path.parent}")
+            except FileExistsError:
+                print(f"Duplicate file exists for {Path(path).name} in {new_path.parent}")
