@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-#  Create a service named db.
   recognitiondatabase:
     image: "postgres"
     networks:
@@ -19,12 +18,13 @@ services:
 
   recognitionapi:
     depends_on:
-        - recognitiondatabase
-    entrypoint: ["/bin/bash", "./entrypoint.sh"]    
+        - recognitiondatabase  
     image: recognitionapi
     networks:
       - backend
     container_name: recognition-api
+    environment:
+      - DATABASE_CONNECTION_STRING=postgres://postgres:P@ssword123@recognitiondatabase:5432/facerecognition
     build: 
       context: ./entelectual-recognition-api
       dockerfile: ./Dockerfile
