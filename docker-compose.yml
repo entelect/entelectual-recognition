@@ -19,6 +19,7 @@ services:
   recognitionapi:
     depends_on:
         - recognitiondatabase  
+    entrypoint: ["/bin/bash", "./entrypoint.sh"]    
     image: recognitionapi
     networks:
       - backend
