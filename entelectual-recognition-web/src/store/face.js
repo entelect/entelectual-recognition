@@ -149,6 +149,9 @@ export const actions = {
     if (detection.recognition) {
       name = detection.recognition.toString(state.descriptors.withDistance)
     }
+
+    name = name.replace(/-/g, " ");
+
     const box = detection.box || detection.detection.box
     if (box) {
       // draw box
@@ -175,7 +178,7 @@ export const actions = {
   },
 
   async getCurrentMatch({ commit, state }) {
-    return state.currentMatch
+    return state.currentMatch.replace(/-/g, " ");
   },
 
   async resetMatch({ commit, state }) {
