@@ -12,14 +12,14 @@ export const mutations = {
       state.videoStream = null
     }
   },
-  pause(state) {
-    if(state.videoStream) {
-      state.videoStream.getTracks().forEach(track => track.enabled = false);
+  pause (state) {
+    if (state.videoStream) {
+      state.videoStream.getTracks().forEach(track => { track.enabled = false })
     }
   },
-  resume(state) {
-    if(state.videoStream) {
-      state.videoStream.getTracks().forEach(track => track.enabled = true);
+  resume (state) {
+    if (state.videoStream) {
+      state.videoStream.getTracks().forEach(track => { track.enabled = true })
     }
   }
 }

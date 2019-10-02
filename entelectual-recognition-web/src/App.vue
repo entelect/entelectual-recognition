@@ -2,7 +2,7 @@
   <div id="app" class="container-fluid">
     <div id="nav">
       <router-link to="/">Recognize</router-link>
-    </div> 
+    </div>
     <router-view/>
   </div>
 </template>
