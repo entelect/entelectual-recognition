@@ -215,14 +215,14 @@ export default {
             descriptor: detection.descriptor
           })
 
-          if (!this.pauseMatch) {
-            this.multipeSameMatch = await self.$store.dispatch(
-              'face/isMultipeSameMatch'
-            )
-            this.currentMatch = await self.$store.dispatch(
-              'face/getCurrentMatch'
-            )
-          }
+          // if (!this.pauseMatch) {
+          //   this.multipeSameMatch = await self.$store.dispatch(
+          //     'face/isMultipeSameMatch'
+          //   )
+          //   this.currentMatch = await self.$store.dispatch(
+          //     'face/getCurrentMatch'
+          //   )
+          // }
 
           self.$store.dispatch('face/draw', {
             canvasCtx,

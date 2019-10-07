@@ -1,7 +1,7 @@
 import * as faceapi from 'face-api.js'
 import axios from 'axios'
 
-export const state = () => ({
+const state = () => ({
   faces: [],
   loading: false,
   loaded: false,
@@ -36,7 +36,7 @@ export const state = () => ({
   }
 })
 
-export const mutations = {
+const mutations = {
   loading (state) {
     state.loading = true
   },
@@ -78,7 +78,7 @@ export const mutations = {
   }
 }
 
-export const actions = {
+const actions = {
   async load ({ commit, state }) {
     if (!state.loading && !state.loaded) {
       commit('loading')
@@ -203,4 +203,15 @@ export const actions = {
     )
     return data
   }
+}
+
+const getters = {
+}
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  actions,
+  mutations
 }

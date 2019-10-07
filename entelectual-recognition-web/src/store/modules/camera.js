@@ -1,8 +1,8 @@
-export const state = () => ({
+const state = () => ({
   videoStream: null
 })
 
-export const mutations = {
+const mutations = {
   start (state, video) {
     state.videoStream = video
   },
@@ -24,7 +24,7 @@ export const mutations = {
   }
 }
 
-export const actions = {
+const actions = {
   async startCamera ({ commit, state }) {
     if (!state.videoStream &&
       navigator &&
@@ -55,8 +55,16 @@ export const actions = {
   }
 }
 
-export const getters = {
+const getters = {
   isCameraStarted: (state) => {
     return !!state.videoStream
   }
+}
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  actions,
+  mutations
 }
