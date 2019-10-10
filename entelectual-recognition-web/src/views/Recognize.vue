@@ -9,10 +9,10 @@
             <b-card-body>
               <div class="row">
                 <div class="col-12 mb-3">
-                  <video id="live-video" width="256" height="256" hidden="hidden" autoplay />
-                  <canvas id="live-canvas" class="video-container" width="256" height="256" />
+                  <video id="live-video" width="320" height="247" hidden="hidden" autoplay />
+                  <canvas id="live-canvas" class="video-container" width="320" height="247" />
                 </div>
-                <div>FPS: {{realFps}}</div>
+                <!-- <div>FPS: {{realFps}}</div> -->
               </div>
             </b-card-body>
 
@@ -215,14 +215,14 @@ export default {
             descriptor: detection.descriptor
           })
 
-          // if (!this.pauseMatch) {
-          //   this.multipeSameMatch = await self.$store.dispatch(
-          //     'face/isMultipeSameMatch'
-          //   )
-          //   this.currentMatch = await self.$store.dispatch(
-          //     'face/getCurrentMatch'
-          //   )
-          // }
+          if (!this.pauseMatch) {
+            this.multipeSameMatch = await self.$store.dispatch(
+              'face/isMultipeSameMatch'
+            )
+            this.currentMatch = await self.$store.dispatch(
+              'face/getCurrentMatch'
+            )
+          }
 
           self.$store.dispatch('face/draw', {
             canvasCtx,

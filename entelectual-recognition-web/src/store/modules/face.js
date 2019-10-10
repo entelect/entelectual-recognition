@@ -16,8 +16,8 @@ const state = () => ({
   useTiny: false,
 
   detections: {
-    scoreThreshold: 0.7,
-    inputSize: 256,
+    scoreThreshold: 0.65,
+    inputSize: 320,
     boxColor: '#61892F',
     textColor: '#86C232',
     lineWidth: 1,
