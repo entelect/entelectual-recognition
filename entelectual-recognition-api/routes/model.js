@@ -42,7 +42,7 @@ router.get('/train', function (req, res, next) {
   })
     .then((userLabels) => {
       trainModel(userLabels);
-    }).then(()=>{
+    }).then(() => {
       res.send("Ok");
     })
 });
@@ -64,20 +64,25 @@ async function trainModel(userLabels) {
   const directoryPath = path.join(__dirname, 'users');
   const faces = [];
 
+  const options = new faceapi.TinyFaceDetectorOptions({
+    scoreThreshold: 0.5,
+    inputSize: 320
+  });
+
   for (let i in userLabels) {
     const userDirectoryPath = path.join(directoryPath, userLabels[i]);
     const photos = await readdir(userDirectoryPath)
     const descriptors = []
     for (let j in photos) {
       const photoPath = path.join(userDirectoryPath, photos[j]);
-
-      const options = new faceapi.TinyFaceDetectorOptions({
-        scoreThreshold: 0.65,
-        inputSize: 256
-      });
-
       const imgBuffer = await readFile(photoPath);
-      const resizedImageBuffer = await sharp(imgBuffer).resize(256, 256).toBuffer();
+      
+      //const resizedImageBuffer = await sharp(imgBuffer).resize(256, 256).toBuffer();
+      //const resizedImageBuffer = await sharp(imgBuffer).rotate().resize(512, null, {"fit": "inside"}).toBuffer();
+      //const imgSharp = await sharp(imgBuffer);
+      //const imgMetadata = await imgSharp.metadata();
+
+      const resizedImageBuffer = await sharp(imgBuffer).rotate().resize(320, 247, { "fit": "inside" }).withMetadata().toBuffer();
       const img = await canvas.loadImage(resizedImageBuffer)
 
       const detections = await faceapi.detectSingleFace(img, options).withFaceLandmarks().withFaceDescriptor();
